@@ -5,40 +5,40 @@ import google.generativeai as genai
 from PIL import Image
 from datetime import datetime
 
-# --- 1. Sİ və API Ayarları ---
+
 API_KEY = st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-2.5-flash') # və ya bayaq işləyən ad hansı idisə
 
-# --- 2. Vebsaytın Dizaynı və Başlığı ---
+
 st.set_page_config(page_title="Mistik Astrologiya", page_icon="✨")
 st.title("✨ Sizin Süni İntellekt Astroloqunuz")
 st.write("Doğum məlumatlarınızı daxil edin və ulduzların sizə nə dediyini öyrənin!")
 
-# İstifadəçidən məlumat alırıq
+
 col1, col2 = st.columns(2)
 with col1:
     dogum_tarixi = st.date_input("Doğum Tarixiniz", min_value=datetime(1930, 1, 1))
 with col2:
     dogum_saati = st.time_input("Doğum Saatınız (Təxmini)")
 
-# --- 3. SEHİRLİ DÜYMƏ ---
+
 if st.button("🔮 Xəritəmi və Falımı Yarat"):
     
     with st.spinner('Ulduzlar oxunur... Zəhmət olmasa gözləyin...'):
         
-        # Tarixi ephem formatına salırıq
+    
         tarix_str = f"{dogum_tarixi.strftime('%Y/%m/%d')} {dogum_saati.strftime('%H:%M')}"
         
-        # Astronomik hesablamalar
+  
         gunes = ephem.Sun(tarix_str)
         ay = ephem.Moon(tarix_str)
         
-        # Bürclərin adını tapmaq (Sİ-yə vermək üçün)
+  
         gunes_const = ephem.constellation(gunes)[1]
         ay_const = ephem.constellation(ay)[1]
         
-        # --- ŞƏKİL YARATMA İŞLƏMİ ---
+  
         merkez_x = 1126
         merkez_y = 1250
         radius = 500
@@ -61,7 +61,7 @@ if st.button("🔮 Xəritəmi və Falımı Yarat"):
         img.paste(gunes_ikon, (gx - 40, gy - 40), gunes_ikon)
         img.paste(ay_ikon, (ax - 40, ay_y - 40), ay_ikon)
         
-       # --- SÜNİ İNTELLEKT FAL İŞLƏMİ ---
+       
         prompt = f"""
         Sən çox peşəkar, dərin bilikləri olan, insanlara yol göstərən və onlara dəyərli məsləhətlər verən bir astroloqsan. 
         Qarşındakı şəxsin Günəş bürcü {gunes_const}, Ay bürcü isə {ay_const} bürcündədir.
